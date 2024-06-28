@@ -16,11 +16,5 @@ COPY . .
 # Build the app
 RUN npm run build
 
-# Install a simple server to serve the built app
-RUN npm install -g serve
-
-# Expose the port the app runs on
-EXPOSE 3000
-
-# Define the command to run the app
-CMD ["serve", "-s", "build", "-l", "3000"]
+FROM nginx:alpine
+COPY --from=react /app/build /usr/share/nginx/html
