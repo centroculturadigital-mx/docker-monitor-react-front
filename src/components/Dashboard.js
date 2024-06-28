@@ -19,7 +19,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await request('https://test.centroculturadigital.mx/api/graphql', projectsQuery);
+        const response = await request('http://localhost:3000/api/graphql', projectsQuery);
         setProjects(response.projects);
         setLoading(false);
       } catch (error) {
@@ -40,12 +40,12 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
-      <h1>Dashboard</h1>
+    <div style={{backgroundColor: '#0F0D0E'}}>
+      <h1 style={{color: 'lightgreen'}}>Dashboard</h1>
       <ul>
         {projects.length > 0 ? (
           projects.map((p) => (
-            <li key={p.id}>
+            <li key={p.id} style={{color: 'lightpink'}}>
               <Link to={`/dashboard/${p.id}`}>{p.title}</Link>
             </li>
           ))
