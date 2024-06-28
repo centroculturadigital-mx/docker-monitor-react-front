@@ -13,8 +13,4 @@ RUN npm install
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Build the app
-RUN npm run build
-
-FROM nginx:alpine
-COPY --from=react /app/build /usr/share/nginx/html
+CMD npm run dev
