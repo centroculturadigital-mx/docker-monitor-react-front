@@ -20,7 +20,7 @@ FROM nginx:alpine
 
 COPY --from=react /app/build /usr/share/nginx/html
 
-COPY default.conf /etc/nginx/conf.d/default.conf
+COPY --from=react /app/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
