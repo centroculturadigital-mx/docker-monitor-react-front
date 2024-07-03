@@ -17,7 +17,7 @@ RUN npm run build
 
 FROM node:20-alpine 
 
-WORDIR /app
+WORKDIR /app
 
 COPY --from=react /app/build /app/build
 
