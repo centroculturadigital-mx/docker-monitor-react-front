@@ -17,6 +17,6 @@ RUN npm run build
 
 RUN npm install http-server -g
 
-RUN cp build build/dashboard -r
+RUN mv build dashboard
 
-CMD ["http-server", "build/"]
+CMD ["http-server"]
