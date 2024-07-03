@@ -15,6 +15,12 @@ COPY . .
 
 RUN npm run build
 
+FROM node:20-alpine 
+
+WORDIR /app
+
+COPY --from=react /app/build /app/build
+
 RUN npm install http-server -g
 
 RUN mv build dashboard
