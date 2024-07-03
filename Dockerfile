@@ -15,14 +15,13 @@ COPY . .
 
 RUN npm run build
 
-FROM node:20-alpine 
+FROM alpine:edge
 
-WORKDIR /app
+RUN apk update \
+    && apk add lighttpd \
+    && rm -rf /var/cache/apk/*
 
-COPY --from=react /app/build /app/build
+COPY --from=react /app/build /var/www/localhost/htdocs
+COPY --from=react /app/build /var/www/localhost/htdocs/dashboard
 
-RUN npm install http-server -g
-
-RUN mv build dashboard
-
-CMD ["http-server"]
+CMD ["lighttpd", "-D", "-f", "/etc/lighttpd/lighttpd.conf"]
