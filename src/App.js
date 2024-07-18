@@ -6,7 +6,8 @@ import Home from './components/Home';
 import Test from './components/Test';
 
 function App() {
-  return (
+  return (<div>
+    <img src="/labweb_logo.png" alt="logo" />
     <div className="App">
       <Routes>
 
@@ -16,7 +17,7 @@ function App() {
         <Route path="/dashboard/:id" element={<Container />} />
       </Routes>
     </div>
-  );
+  </div>);
 }
 
 export default App;
