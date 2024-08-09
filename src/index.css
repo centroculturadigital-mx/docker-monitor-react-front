@@ -1,9 +1,10 @@
 body {
   background-color: #2b2d3d;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Fira Code", monospace;
   margin: 0;
   padding: 0;
   height: 100vh;
+  font-size: 20px;
   color: #c397e8;
 }
 
@@ -30,3 +31,77 @@ a:hover {
   background-size: 10px 4px;
   background-repeat: repeat-x;
 }
+
+.title        { width: 70%;
+  font-size: 1.2rem;
+  border: 1px solid red;
+  overflow-x: hidden }
+.title:before { 
+  width: 0;
+  white-space: nowrap;
+  content:
+  "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+  "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+  "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+  "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+  "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+  "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+  "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░" }
+
+  .title:after { 
+    display: block;
+    width: 0;
+    white-space: nowrap;
+    content:
+    "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+    "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+    "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+    "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+    "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+    "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+    "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░" }
+
+    .select {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 15px;
+  }    .select select {
+          font-family: 'Arial';
+          display: inline-block;
+          cursor: pointer;
+          padding: 10px 15px;
+          outline: 0;
+          border: 0px solid #000000;
+          border-radius: 44px;
+          background: #bf94e4;
+          color: #cae797;
+      }
+          .select select::-ms-expand {
+              display: none;
+          }
+          .select select:hover,
+          .select select:focus {
+              color: #000000;
+              background: #bf94e4;
+          }
+          .select select:disabled {
+              opacity: 0.7;
+              pointer-events: none;
+          }
+  .select_arrow {
+    background: #bf94e4;
+    border-radius: 44px;
+    height: 37px;
+    width: 43px;
+    position: absolute;
+    right: -10px;
+    top: 0;
+    z-index: -1;
+  }
+  .select select:hover ~ .select_arrow,
+  .select select:focus ~ .select_arrow {
+      border-top-color: #000000;
+  }
+  .select select:disabled ~ .select_arrow {
+      border-top-color: #cccccc;
+  }

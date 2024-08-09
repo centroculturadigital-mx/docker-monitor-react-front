@@ -11,6 +11,7 @@ query ($where: ProjectWhereUniqueInput!) {
   project(where: $where) {
     id 
     title
+    url
     metrics {
       cpu
       ram
@@ -37,6 +38,7 @@ const Container = ()=> {
   const { id } = useParams();
 
   const [project, setProject] = useState('');
+  const [url, setUrl] = useState('');
   const [metrics, setMetrics] = useState([]);
   const [cpuData, setCpuData] = useState({});
   const [ramData, setRamData] = useState({});
@@ -52,10 +54,14 @@ const Container = ()=> {
       try {
 
         const response = await request('https://test.centroculturadigital.mx/api/graphql', projectMetrics, {
+        // const response = await request('http://localhost:3000/api/graphql', projectMetrics, {
           where: {id}
         });
-        setProject(response.project.title)
-        setMetrics(response.project.metrics);
+
+        console.log('response.project.metrics', response.project.metrics);
+        setProject(response.project?.title || 'title')
+        setUrl(response.project?.url || '#')
+        setMetrics(response.project?.metrics || []);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -68,8 +74,7 @@ const Container = ()=> {
 
   useEffect(() => {
 
-   if (metrics.length) { 
-    
+   if (metrics.length > 0) { 
       let labels = []
       let cpuDataSet = []
       let ramDataSet = []
@@ -103,7 +108,7 @@ const Container = ()=> {
       const cpuData = {
         labels, 
         datasets: [{
-          label: 'CPU Usage', 
+          label: 'CPU', 
           data: cpuDataSet,
           borderColor: 'rgba(75, 192, 192, 1)',
           backgroundColor: function(context) {
@@ -117,7 +122,7 @@ const Container = ()=> {
       const ramData = {
         labels, 
         datasets: [{
-          label: 'Memory Usage', 
+          label: 'Memoria', 
           data: ramDataSet,
           borderColor: 'rgba(192, 75,  192, 1)',
           backgroundColor: function(context) {
@@ -147,16 +152,32 @@ const Container = ()=> {
   };
 
   return (
-    <div>
-      <h1 style={{color: 'lightgreen'}}>Uso de recursos para {project}</h1>
-      <select onChange={handleDataFormatChange} value={dataFormat}>
-        <option value="byDay">Promedio por día (últimos 30 días)</option>
-        <option value="byHour">Valor por hora (últimas 24 hrs)</option>
-      </select>
-      <Bar data={cpuData} style={{maxHeight: '300px', margin: '30px'}}/>
-      <Bar data={ramData} style={{maxHeight: '300px', margin: '30px'}}/>
+    <div style={{paddingBottom: "50px", margin: "30px"}}>
+                <h1 className="title" style={{backgroundColor: '#bf94e4', color: "#cae797", display: "grid"}}>
+                  <span style={{display: 'flex', alignItems: "center"}}>
+                    {project} 
+                    <img style={{height: "30px", margin: "0 20px"}} src="/dashboard/dobleArrow.png" alt="arrow" />
+                    <a style={{fontSize: '0.8rem'}} href={url} rel="noreferrer" target="_blank">{url ? url.replace(/^https?:\/\//, ''): ''} [↗]</a>
+                  </span>
+                </h1>
+     <div className='select'>  
+        <select  onChange={handleDataFormatChange} value={dataFormat}>
+          <option value="byDay">Promedio por día (últimos 30 días)</option>
+          <option value="byHour">Valor por hora (últimas 24 hrs)</option>
+        </select>
+        <div class="select_arrow"></div>
+      </div>
+      <p>Registro del uso de CPU y Memoria de la página del centro de cultura digital, en los últimos 30 días.</p>
+      <div><h2 style={{display: "inline", backgroundColor: "#cae797", color: "black"}}>Uso de CPU</h2></div>
+      {cpuData  && <Bar data={cpuData} style={{maxHeight: '300px', margin: '30px'}}/>}
+<p>{`~> CPU === Se refiere a la cantidad de capacidad de procesamiento que está siendo utilizada en un momento dado. Es una métrica importante para monitorear, ya que puede indicar cuán intensamente está siendo utilizado el servidor`}</p>
+
+      <div><h2 style={{display: "inline", backgroundColor: "#cae797", color: "black"}}>Uso de Memoria</h2></div>
+{ramData && <Bar data={ramData} style={{maxHeight: '300px', margin: '30px'}}/>}
+<p>{`~> RAM === Se refiere a la cantidad de memoria RAM que está siendo utilizada en un momento dado. Al igual que con el uso de la CPU, el uso de la memoria es una métrica crucial para monitorear, ya que impacta directamente en el rendimiento del servidor`}</p>
     </div>
   );
 }
+
 
 export default Container;

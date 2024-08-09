@@ -35,6 +35,7 @@ const Dashboard = () => {
     const fetchProjects = async () => {
       try {
         const response = await request('https://test.centroculturadigital.mx/api/graphql', projectsQuery);
+        // const response = await request('http://localhost:3000/api/graphql', projectsQuery);
         setProjects(response.projects);
         setLoading(false);
       } catch (error) {
@@ -60,11 +61,13 @@ const Dashboard = () => {
       <ul>
         {projects.length > 0 ? (
           projects.map((p) => (
-            <li key={p.id} style={{display: "flex", fontSize: "30px", alignItems: "baseline"}}>
+            <li key={p.id} style={{display: "flex", alignItems: "baseline"}}>
               <div style={{display: "flex", flex: 1}}>
+                <img style={{height: "30px"}} src="/dashboard/dobleArrow.png" alt="arrow" />
                 <Link to={`/dashboard/${p.id}`}>{p.title}</Link>
                 <div className='divisor'></div>
               </div>
+              <img style={{height: "30px"}} src="/dashboard/curlyArrow.jpg" alt="arrow2" />
               <a style={{margin: "0 20px", fontSize: '0.8rem'}} href={p.url} rel="noreferrer" target="_blank">{p.url ? p.url.replace(/^https?:\/\//, ''): ''} [↗]</a>
               <div style={{marginRight: "20px", fontSize: '0.8rem'}}>CPU: {p.metrics[0].cpu} |||| RAM: {p.metrics[0].ram}</div>
             </li>
