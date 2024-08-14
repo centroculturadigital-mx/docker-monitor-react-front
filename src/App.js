@@ -4,6 +4,7 @@ import Dashboard from './components/Dashboard';
 import Container from './components/Container';
 import Home from './components/Home';
 import Test from './components/Test';
+import OtherTime from './components/OtherTime';
 
 function App() {
   return (<div>
@@ -15,6 +16,7 @@ function App() {
         <Route exact path="/test" element={<Test />} />
         <Route exact path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/:id" element={<Container />} />
+        <Route path="/dashboard/other-time/:id" element={<OtherTime />} />
       </Routes>
     </div>
   </div>);

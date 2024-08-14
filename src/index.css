@@ -21,6 +21,12 @@ a {
 
 a:hover {
   text-decoration: underline;
+  cursor: pointer;
+}
+
+button:hover{
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .divisor {
@@ -108,3 +114,24 @@ a:hover {
   .select select:disabled ~ .select_arrow {
       border-top-color: #cccccc;
   }
+
+  .rdp-root {
+    --rdp-accent-color: #BF94E4; /* Change the accent color to indigo. */
+    --rdp-accent-background-color: #2B2D3D; /* Change the accent background color. */
+   
+  }
+
+  .rdp-day_button {
+    border: 1px solid #BF94E4 !important;
+    border-radius: 0 !important;
+  }
+
+  .rdp-chevron {
+    fill: #BF94E4 !important;
+  }
+  .rdp-today {
+    color: #BF94E4 !important;
+    text-decoration: underline;
+  }
+
+  
