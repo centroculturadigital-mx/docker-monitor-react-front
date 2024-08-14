@@ -7,7 +7,7 @@ import Test from './components/Test';
 
 function App() {
   return (<div>
-    <img src="/dashboard/labweb_logo.png" alt="logo" />
+    <img src="/dashboard/labweb_logo.png" alt="logo" style={{height: "35px"}} />
     <div className="App">
       <Routes>
 

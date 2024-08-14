@@ -15,7 +15,7 @@ body {
 }
 
 a {
-  color: #cae897;
+  color: #bf94e4;
   text-decoration: none;
 }
 
@@ -39,6 +39,8 @@ a:hover {
 .title:before { 
   width: 0;
   white-space: nowrap;
+  color: #bf94e4;
+  background: none;
   content:
   "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
   "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
@@ -51,6 +53,8 @@ a:hover {
   .title:after { 
     display: block;
     width: 0;
+    color: #bf94e4;
+    background: none;
     white-space: nowrap;
     content:
     "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"

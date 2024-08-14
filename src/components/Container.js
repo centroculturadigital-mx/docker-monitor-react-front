@@ -172,7 +172,7 @@ const Container = ()=> {
       {cpuData  && <Bar data={cpuData} style={{maxHeight: '300px', margin: '30px'}}/>}
 <p>{`~> CPU === Se refiere a la cantidad de capacidad de procesamiento que está siendo utilizada en un momento dado. Es una métrica importante para monitorear, ya que puede indicar cuán intensamente está siendo utilizado el servidor`}</p>
 
-      <div><h2 style={{display: "inline", backgroundColor: "#cae797", color: "black"}}>Uso de Memoria</h2></div>
+      <div><h2 style={{display: "inline", backgroundColor: "#cae797", color: "black", fontSize: "1rem"}}>Uso de Memoria</h2></div>
 {ramData && <Bar data={ramData} style={{maxHeight: '300px', margin: '30px'}}/>}
 <p>{`~> RAM === Se refiere a la cantidad de memoria RAM que está siendo utilizada en un momento dado. Al igual que con el uso de la CPU, el uso de la memoria es una métrica crucial para monitorear, ya que impacta directamente en el rendimiento del servidor`}</p>
     </div>
