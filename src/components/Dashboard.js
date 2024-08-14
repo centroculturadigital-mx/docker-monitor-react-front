@@ -63,14 +63,14 @@ const Dashboard = () => {
           projects.map((p) => (
             <li key={p.id} style={{display: "flex", alignItems: "center"}}>
               <div style={{display: "flex", flex: 1}}>
-                <img style={{height: "30px"}} src="/dashboard/dobleArrow.png" alt="arrow" />
+                <img style={{height: "30px", marginRight: "10px"}} src="/dashboard/dobleArrow.png" alt="arrow" />
                 <Link to={`/dashboard/${p.id}`}>{p.title}</Link>
                 <div className='divisor'></div>
               </div>
               <img style={{height: "30px"}} src="/dashboard/curlyArrow.jpg" alt="arrow2" />
               <a style={{margin: "0 20px"}} href={p.url} rel="noreferrer" target="_blank">{p.url ? p.url.replace(/^https?:\/\//, ''): ''} [↗]</a>
               <img style={{height: "30px"}} src="/dashboard/curlyArrow.jpg" alt="arrow2" />
-              <div style={{marginRight: "20px"}}>CPU: {p.metrics[0].cpu} |||| RAM: {p.metrics[0].ram}</div>
+              <div style={{margin: "0 20px"}}>CPU: {p.metrics[0].cpu} |||| RAM: {p.metrics[0].ram}</div>
             </li>
           ))
         ) : (

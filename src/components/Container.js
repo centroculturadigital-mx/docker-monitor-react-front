@@ -153,11 +153,11 @@ const Container = ()=> {
 
   return (
     <div style={{paddingBottom: "50px", margin: "30px"}}>
-                <h1 className="title" style={{backgroundColor: '#bf94e4', color: "#cae797", display: "grid"}}>
-                  <span style={{display: 'flex', alignItems: "center"}}>
+                <h1 className="title" style={{color: "#cae797", display: "grid"}}>
+                  <span style={{backgroundColor: '#bf94e4', display: 'flex', alignItems: "center"}}>
                     {project} 
                     <img style={{height: "30px", margin: "0 20px"}} src="/dashboard/dobleArrow.png" alt="arrow" />
-                    <a style={{fontSize: '0.8rem'}} href={url} rel="noreferrer" target="_blank">{url ? url.replace(/^https?:\/\//, ''): ''} [↗]</a>
+                    <a style={{fontSize: '0.8rem', color: "#cae797" }} href={url} rel="noreferrer" target="_blank">{url ? url.replace(/^https?:\/\//, ''): ''} [↗]</a>
                   </span>
                 </h1>
      <div className='select'>  

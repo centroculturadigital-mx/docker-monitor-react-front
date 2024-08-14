@@ -32,7 +32,7 @@ a:hover {
   background-repeat: repeat-x;
 }
 
-.title        { width: 70%;
+.title        { width: 50%;
   font-size: 1.2rem;
   border: 1px solid red;
   overflow-x: hidden }
