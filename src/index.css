@@ -34,7 +34,6 @@ a:hover {
 
 .title        { width: 50%;
   font-size: 1.2rem;
-  border: 1px solid red;
   overflow-x: hidden }
 .title:before { 
   width: 0;
