@@ -61,8 +61,8 @@ const Container = ()=> {
     const fetchMetrics = async () => {
       try {
 
-        // const response = await request('https://test.centroculturadigital.mx/api/graphql', projectMetrics, {
-        const response = await request('http://localhost:3000/api/graphql', projectMetrics, {
+        const response = await request('https://test.centroculturadigital.mx/api/graphql', projectMetrics, {
+        // const response = await request('http://localhost:3000/api/graphql', projectMetrics, {
           where: {id}
         });
 
