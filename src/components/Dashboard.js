@@ -34,8 +34,8 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await request('https://test.centroculturadigital.mx/api/graphql', projectsQuery);
-        // const response = await request('http://localhost:3000/api/graphql', projectsQuery);
+        // const response = await request('https://test.centroculturadigital.mx/api/graphql', projectsQuery);
+        const response = await request('http://localhost:3000/api/graphql', projectsQuery);
         setProjects(response.projects);
         setLoading(false);
       } catch (error) {
