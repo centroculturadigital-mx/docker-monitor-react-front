@@ -3,18 +3,19 @@ import { useParams } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto'
 import request, { gql } from 'graphql-request';
-import { format, formatDistance } from "date-fns";
-
+import { addDays, format, formatDistance, subDays } from "date-fns";
+import { es } from 'date-fns/locale';
 import { DayPicker } from "react-day-picker";
-import "react-day-picker/style.css";const { es } = require('date-fns/locale')
+import "react-day-picker/style.css";
 
 const projectMetrics = gql`
-query ($where: ProjectWhereUniqueInput!) {
+query ($where: ProjectWhereUniqueInput!, $whereMetrics: MetricWhereInput) {
   project(where: $where) {
     id 
     title
+    container
     url
-    metrics {
+    metrics (where: $whereMetrics) {
       cpu
       ram
       createdAt
@@ -40,10 +41,13 @@ const Container = ()=> {
   const { id } = useParams();
 
   const [pickingAvgOrByHour, setPickingAvgOrByHour] = useState(false)
+  const [pickingDays, setPickingDays] = useState(false)
   const [averageSelected, setAverageSelected] = useState(false)
   const [byHourSelected, setByHourSelected] = useState(false)
-  const [daySelected, setDaySelected] = useState(null)
-  const [endDaySelected, setEndDaySelected] = useState(null)
+  const [daySelected, setDaySelected] = useState(subDays(new Date(), 31))
+  const [endDaySelected, setEndDaySelected] = useState(new Date())
+  const [containerTag, setContainerTag] = useState(null)
+  const [containerUpdatedDate, setContainerUpdatedDate] = useState(null)
 
   const [project, setProject] = useState('');
   const [url, setUrl] = useState('');
@@ -61,16 +65,39 @@ const Container = ()=> {
     const fetchMetrics = async () => {
       try {
 
+        let whereMetrics = {
+          AND: [
+            {
+              createdAt: {
+                gt: daySelected.toISOString()
+              }
+            }, {
+              createdAt: {
+                lte: endDaySelected ||addDays(daySelected, 1).toISOString()
+              }
+            }
+        ]
+        }
         const response = await request('https://test.centroculturadigital.mx/api/graphql', projectMetrics, {
         // const response = await request('http://localhost:3000/api/graphql', projectMetrics, {
-          where: {id}
+          where: {id},
+          whereMetrics
         });
 
-        console.log('response.project.metrics', response.project.metrics);
+        
+
+        
         setProject(response.project?.title || 'title')
         setUrl(response.project?.url || '#')
         setMetrics(response.project?.metrics || []);
         setLoading(false);
+        // const response2 = (await (await fetch('http://localhost:3003/api/' + response.project.container)).json()).data
+        const response2 = (await (await fetch('http://localhost:3003/docker/' + response.project.container)).json()).data
+        if (response2) {
+          console.log('response2', response2.State.StartedAt);
+          setContainerTag(response2.Config.Image.split(':')[1])
+          setContainerUpdatedDate(formatDistance(new Date(response2.State.StartedAt), new Date(), {locale: es}))
+        }
       } catch (error) {
         setError(error);
         setLoading(false);
@@ -78,7 +105,7 @@ const Container = ()=> {
     };
 
     fetchMetrics();
-  }, []);
+  }, [daySelected, endDaySelected, id]);
 
   useEffect(() => {
 
@@ -88,29 +115,15 @@ const Container = ()=> {
       let ramDataSet = []
       const now = new Date()
       if (dataFormat == "byDay") {
-        const last30Days = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
-        const lastMetrics = metrics.filter(m => {
-          const createdAtDate = new Date(m.createdAt);
-          return createdAtDate >= last30Days;
-        })
-        const cpuGrouped = groubByDay(lastMetrics,'cpu')
-        const ramGrouped = groubByDay(lastMetrics,'ram')
+        const cpuGrouped = groubByDay(metrics,'cpu')
+        const ramGrouped = groubByDay(metrics,'ram')
         cpuDataSet = Object.entries(cpuGrouped).map(ent => ent[1].reduce((acc , m)=> acc+=m, 0)/ ent[1].length)
         ramDataSet = Object.entries(ramGrouped).map(ent => ent[1].reduce((acc , m)=> acc+=m, 0)/ ent[1].length)
         labels = Object.keys(cpuGrouped).map( d => format(d, 'eee, dd MMM', {locale: es}))
       } else {
-
-        const last24Hours = new Date(now.getTime() - (24 * 60 * 60 * 1000));
-        let lastMetrics = metrics.filter(m => {
-          const createdAtDate = new Date(m.createdAt);
-          return createdAtDate >= last24Hours;
-        })
-        if (lastMetrics.length == 0) {
-          lastMetrics = metrics.slice(-24)
-        }
-        cpuDataSet = lastMetrics.map(lm => lm.cpu)
-        ramDataSet = lastMetrics.map(lm => lm.ram)
-        labels = lastMetrics.map(m => format(m.createdAt, 'h a'))
+        cpuDataSet = metrics.map(lm => lm.cpu)
+        ramDataSet = metrics.map(lm => lm.ram)
+        labels = metrics.map(m => format(m.createdAt, 'h a'))
       }
  
       const cpuData = {
@@ -164,21 +177,28 @@ const Container = ()=> {
     { pickingAvgOrByHour ?
         <div style={{height: "60vh", display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
           <button
-           onClick={() => {setPickingAvgOrByHour(false); setAverageSelected(true)}}
+           onClick={() => {setPickingAvgOrByHour(false); setByHourSelected(false); setAverageSelected(true); setPickingDays(true)}}
            style={{padding: "20px", fontWeight: 'bold', backgroundColor: "#cae797", color: '#2b2d3d'}}
           >Ver promedio por día en rango de fechas</button>
           <button
-           onClick={() => {setPickingAvgOrByHour(false); setByHourSelected(true)}}
+           onClick={() => {setPickingAvgOrByHour(false); setAverageSelected(false); setByHourSelected(true); setPickingDays(true)}}
            style={{padding: "20px", fontWeight: 'bold', backgroundColor: "#cae797", color: '#2b2d3d'}}
           >Ver mediciones por hora de un día</button>
         </div>
       : 
-      ( !daySelected && (averageSelected || byHourSelected) ? 
+      ( pickingDays && (averageSelected || byHourSelected) ? 
         <div style={{height: "60vh", display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
           <DayPicker
             mode="single"
             selected={daySelected}
-            onSelect={setDaySelected}
+            onSelect={(s) => {
+              setDaySelected(s)
+              if (byHourSelected) {
+                setEndDaySelected(addDays(s, 1))
+                setDataFormat('byHour')
+                setPickingDays(false)
+              }
+            }}
             footer={
               averageSelected ? "Select initial date" : "Select a day"
             }
@@ -187,8 +207,11 @@ const Container = ()=> {
             averageSelected && 
             <DayPicker
               mode="single"
-              selected={daySelected}
-              onSelect={setDaySelected}
+              selected={endDaySelected}
+              onSelect={(s) => {
+                setEndDaySelected(s)
+                setPickingDays(false)
+              }}
               footer="Select ending date"
             />
           }
@@ -197,19 +220,23 @@ const Container = ()=> {
         <div style={{paddingBottom: "50px", margin: "30px"}}>
                     <h1 className="title" style={{color: "#cae797", display: "grid"}}>
                       <span style={{backgroundColor: '#bf94e4', display: 'flex', alignItems: "center"}}>
-                        {project} 
+                        <span style={{padding: '0 5px'}}>{project} </span>
                         <img style={{height: "30px", margin: "0 20px"}} src="/dashboard/dobleArrow.png" alt="arrow" />
                         <a style={{fontSize: '0.8rem', color: "#cae797" }} href={url} rel="noreferrer" target="_blank">{url ? url.replace(/^https?:\/\//, ''): ''} [↗]</a>
-                        <button style={{color: "#bf94e4", background: "#cae797", border: "none", height: "100%", margin: "0 10px", padding: "0 10px"}} onClick={() => setPickingAvgOrByHour(true)}>Ver fechas anteriores</button>
+                        <button style={{color: "#2b2d3d", background: "#cae797", border: "none", height: "100%", margin: "0 10px", padding: "0 10px"}} onClick={() => setPickingAvgOrByHour(true)}>Ver fechas anteriores</button>
                       </span>
                     </h1>
+                    <p>
+                      Tag: {containerTag}, corriendo desde: {containerUpdatedDate}
+                    </p>
         <div className='select'>  
             <select  onChange={handleDataFormatChange} value={dataFormat}>
-              <option value="byDay">Promedio por día (últimos 30 días)</option>
-              <option value="byHour">Valor por hora (últimas 24 hrs)</option>
+              <option value="byDay">Promedio por día</option>
+              <option value="byHour">Valor por hora </option>
             </select>
             <div class="select_arrow"></div>
           </div>
+          <p>{format(daySelected, 'dd MMM')} {dataFormat == 'byHour' ? '' : `- ${format(endDaySelected, 'dd MMM')}`} </p>
           <p>Registro del uso de CPU y Memoria de la página del centro de cultura digital, en los últimos 30 días.</p>
           <div><h2 style={{display: "inline", backgroundColor: "#cae797", color: "black",  fontSize: "1rem", padding: "5px"}}>Uso de CPU</h2></div>
             {cpuData  && <Bar data={cpuData} style={{maxHeight: '300px', margin: '30px'}}/>}
