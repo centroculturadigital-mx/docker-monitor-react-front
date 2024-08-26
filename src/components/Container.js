@@ -92,7 +92,7 @@ const Container = ()=> {
         setMetrics(response.project?.metrics || []);
         setLoading(false);
         // const response2 = (await (await fetch('http://localhost:3003/api/' + response.project.container)).json()).data
-        const response2 = (await (await fetch('http://localhost:3003/docker/' + response.project.container)).json()).data
+        const response2 = (await (await fetch('https://test.centroculturadigital.mx/docker/' + response.project.container)).json()).data
         if (response2) {
           console.log('response2', response2.State.StartedAt);
           setContainerTag(response2.Config.Image.split(':')[1])
